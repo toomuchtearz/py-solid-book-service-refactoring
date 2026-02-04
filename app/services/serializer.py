@@ -8,17 +8,17 @@ from app.book import Book
 
 class Serializer(ABC):
     @abstractmethod
-    def serialize(self, book: Book) -> str:
+    def execute(self, book: Book) -> str:
         pass
 
 
 class JSONSerializer(Serializer):
-    def serialize(self, book: Book) -> str:
+    def execute(self, book: Book) -> str:
         return json.dumps({"title": book.title, "content": book.content})
 
 
 class XMLSerializer(Serializer):
-    def serialize(self, book: Book) -> str:
+    def execute(self, book: Book) -> str:
         root = Etree.Element("book")
         title = Etree.SubElement(root, "title")
         title.text = book.title

@@ -5,29 +5,27 @@ from app.services.serializer import JSONSerializer, XMLSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    serializer_mapping = {
-        "json": JSONSerializer,
-        "xml": XMLSerializer,
-    }
-    printer_mapping = {
-        "console": ConsolePrinter,
-        "reverse": ReversePrinter,
-    }
-    display_mapping = {
-        "console": ConsoleDisplay,
-        "reverse": ReverseDisplay,
+    mapping = {
+        "serialize":
+            {
+                "json": JSONSerializer,
+                "xml": XMLSerializer,
+            },
+        "print":
+            {
+                "console": ConsolePrinter,
+                "reverse": ReversePrinter,
+            },
+        "display":
+            {
+                "console": ConsoleDisplay,
+                "reverse": ReverseDisplay,
+            }
     }
 
     for command, process_type in commands:
-        if command == "serialize":
-            serializer = serializer_mapping.get(process_type)()
-            return serializer.serialize(book=book)
-        elif command == "print":
-            printer = printer_mapping.get(process_type)()
-            printer.print(book=book)
-        elif command == "display":
-            display = display_mapping.get(process_type)()
-            display.display(book=book)
+        processor = mapping[command][process_type]()
+        return processor.execute(book=book)
 
 
 if __name__ == "__main__":
