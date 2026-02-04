@@ -5,7 +5,6 @@ from app.services.serializer import JSONSerializer, XMLSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    serialized_data = None
     mapping = {
         "serialize":
             {
