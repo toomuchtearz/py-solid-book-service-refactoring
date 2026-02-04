@@ -5,7 +5,7 @@ from app.services.serializer import JSONSerializer, XMLSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
-    result = None
+    serialized_data = None
     mapping = {
         "serialize":
             {
@@ -27,16 +27,18 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for command, process_type in commands:
         processor = mapping[command][process_type]()
 
-        result = processor.execute(book=book)
+        output = processor.execute(book=book)
 
-    return result if result else None
+        if command == "serialize":
+            return output
 
 
 if __name__ == "__main__":
     sample_book = Book("Sample Book", "This is some sample content.")
-    main(
+    print(main(
         sample_book,
         [
             ("serialize", "json"),
+            ("print", "reverse")
         ],
-    )
+    ))
