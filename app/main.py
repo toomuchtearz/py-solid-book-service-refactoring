@@ -5,6 +5,7 @@ from app.services.serializer import JSONSerializer, XMLSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    result = None
     mapping = {
         "serialize":
             {
@@ -25,7 +26,10 @@ def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
 
     for command, process_type in commands:
         processor = mapping[command][process_type]()
-        return processor.execute(book=book)
+
+        result = processor.execute(book=book)
+
+    return result if result else None
 
 
 if __name__ == "__main__":
