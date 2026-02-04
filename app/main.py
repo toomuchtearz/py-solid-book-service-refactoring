@@ -1,26 +1,33 @@
 from app.book import Book
-from app.services.display import Display
-from app.services.printer import Printer
-from app.services.serializer import Serializer
+from app.services.display import ConsoleDisplay, ReverseDisplay
+from app.services.printer import ConsolePrinter, ReversePrinter
+from app.services.serializer import JSONSerializer, XMLSerializer
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
+    serializer_mapping = {
+        "json": JSONSerializer,
+        "xml": XMLSerializer,
+    }
+    printer_mapping = {
+        "console": ConsolePrinter,
+        "reverse": ReversePrinter,
+    }
+    display_mapping = {
+        "console": ConsoleDisplay,
+        "reverse": ReverseDisplay,
+    }
+
     for command, process_type in commands:
-        if command == "display":
-            Display.print(
-                book=book,
-                display_type=process_type
-            )
+        if command == "serialize":
+            serializer = serializer_mapping.get(process_type)()
+            return serializer.serialize(book=book)
         elif command == "print":
-            Printer.print(
-                book=book,
-                print_type=process_type
-            )
-        elif command == "serialize":
-            return Serializer.serialize(
-                book=book,
-                serialize_type=process_type
-            )
+            printer = printer_mapping.get(process_type)()
+            printer.print(book=book)
+        elif command == "display":
+            display = display_mapping.get(process_type)()
+            display.display(book=book)
 
 
 if __name__ == "__main__":
